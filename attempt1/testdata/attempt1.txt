@@ -12,6 +12,8 @@ stdout 'Database installed in .*/sandboxes/'
 stdout 'sandbox server started'
 ! stderr .
 
+exists $HOME/sandboxes/$sb_name
+
 exec dbdeployer delete $sb_name
 stdout 'sandboxes/msb_'
 ! stderr .
