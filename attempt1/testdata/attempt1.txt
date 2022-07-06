@@ -1,0 +1,19 @@
+env HOME=/Users/gmax
+env TMPDIR=/tmp
+env sb_name=msb_8_0_29
+env version=8.0.29
+
+[!exec:dbdeployer] skip 'dbdeployer executable not found'
+exists $HOME/opt/mysql/$version
+! exists $HOME/sandboxes/$sb_name
+
+exec dbdeployer deploy single $version
+stdout 'Database installed in .*/sandboxes/'
+stdout 'sandbox server started'
+! stderr .
+
+exec dbdeployer delete $sb_name
+stdout 'sandboxes/msb_'
+! stderr .
+
+! exists $HOME/sandboxes/$sb_name
