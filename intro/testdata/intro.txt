@@ -1,0 +1,7 @@
+# hello world
+exec cat hello.text
+stdout 'h[a-z]+ w[a-z]+'
+! stderr .
+
+-- hello.text --
+hello world
