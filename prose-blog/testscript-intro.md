@@ -46,3 +46,4 @@ Several interesting points here should be mentioned.
 The testing of a more complex application needs some planning, and it also involves subtle challenges. But for now, I just wanted to point out the existence of this handy testing library.
 In the next days I will show some examples of how `testscript` can be used to write powerful tests with a few lines of code, and how I have overcome the first obstacles.
 
+The code used in this post is available in the [testscript-explore repository](https://github.com/datacharmer/testscript-explore/tree/main/intro).
