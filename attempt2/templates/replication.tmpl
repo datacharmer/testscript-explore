@@ -1,0 +1,41 @@
+env HOME={{.Home}}
+env TMPDIR={{.TmpDir}}
+env sb_dir=$HOME/sandboxes/rsandbox_{{.DbPathVer}}
+
+[!exec:dbdeployer] skip 'dbdeployer executable not found'
+! exists $sb_dir
+
+exec dbdeployer deploy replication --concurrent {{.DbVersion}}
+stdout 'Replication directory installed in .*/sandboxes/rsandbox_{{.DbPathVer}}'
+stdout 'initializing slave 1'
+stdout 'initializing slave 2'
+! stderr .
+
+exists $sb_dir
+
+exists $sb_dir/start_all
+exists $sb_dir/status_all
+exists $sb_dir/stop_all
+exists $sb_dir/use_all
+exists $sb_dir/master/use
+exists $sb_dir/master/start
+exists $sb_dir/master/status
+exists $sb_dir/master/stop
+exists $sb_dir/node1/use
+exists $sb_dir/node1/start
+exists $sb_dir/node1/status
+exists $sb_dir/node1/stop
+exists $sb_dir/node2/use
+exists $sb_dir/node2/start
+exists $sb_dir/node2/status
+exists $sb_dir/node2/stop
+
+
+exec $HOME/sandboxes/rsandbox_{{.DbPathVer}}/test_replication
+stdout '# failed:     0'
+! stderr .
+
+exec dbdeployer delete rsandbox_{{.DbPathVer}}
+stdout 'sandboxes/rsandbox_{{.DbPathVer}}'
+! stderr .
+! exists $sb_dir

@@ -1,0 +1,38 @@
+env HOME={{.Home}}
+env TMPDIR={{.TmpDir}}
+env sb_dir=$HOME/sandboxes/multi_msb_{{.DbPathVer}}
+
+[!exec:dbdeployer] skip 'dbdeployer executable not found'
+! exists $sb_dir
+
+exec dbdeployer deploy multiple --concurrent {{.DbVersion}}
+stdout 'multiple directory installed in .*/sandboxes/multi_msb_{{.DbPathVer}}'
+! stderr .
+
+exists $sb_dir
+
+exists $sb_dir/start_all
+exists $sb_dir/status_all
+exists $sb_dir/stop_all
+exists $sb_dir/use_all
+exists $sb_dir/node1/use
+exists $sb_dir/node1/start
+exists $sb_dir/node1/status
+exists $sb_dir/node1/stop
+exists $sb_dir/node2/use
+exists $sb_dir/node2/start
+exists $sb_dir/node2/status
+exists $sb_dir/node2/stop
+exists $sb_dir/node3/use
+exists $sb_dir/node3/start
+exists $sb_dir/node3/status
+exists $sb_dir/node3/stop
+
+exec $HOME/sandboxes/multi_msb_{{.DbPathVer}}/test_sb_all
+stdout -count=3 '# fail  :     0'
+! stderr .
+
+exec dbdeployer delete multi_msb_{{.DbPathVer}}
+stdout 'sandboxes/multi_msb_{{.DbPathVer}}'
+! stderr .
+! exists $sb_dir
