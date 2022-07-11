@@ -1,4 +1,4 @@
-package attempt1
+package attempt2
 
 import (
 	"bytes"
