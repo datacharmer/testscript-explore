@@ -33,33 +33,27 @@ Let's start by defining a command:
 func findErrorsInLogFile(ts *testscript.TestScript, neg bool, args []string) {
 	if len(args) < 1 {
 		ts.Fatalf("no sandbox path provided")
-		return
 	}
 	sbDir := args[0]
 	dataDir := path.Join(sbDir, "data")
 	logFile := path.Join(dataDir, "msandbox.err")
 	if !dirExists(dataDir) {
 		ts.Fatalf("sandbox data dir %s not found", dataDir)
-		return
 	}
 	if !fileExists(logFile) {
 		ts.Fatalf("file %s not found", logFile)
-		return
 	}
 
 	contents, err := ioutil.ReadFile(logFile)
 	if err != nil {
 		ts.Fatalf("%s", err)
-		return
 	}
 	hasError := strings.Contains(string(contents), "ERROR")
 	if neg && hasError {
 		ts.Fatalf("ERRORs found in %s\n", logFile)
-		return
 	}
 	if !neg && !hasError {
 		ts.Fatalf("ERRORs not found in %s\n", logFile)
-		return
 	}
 }
 ```

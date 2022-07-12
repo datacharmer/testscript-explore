@@ -166,36 +166,30 @@ func checkPorts(ts *testscript.TestScript, neg bool, args []string) {
 	}
 	if len(args) < 2 {
 		ts.Fatalf("no sandbox path and number of ports provided")
-		return
 	}
 	sbDir := args[0]
 	numPorts, err := strconv.Atoi(args[1])
 	if err != nil {
 		ts.Fatalf("error converting text '%s' to number: %s", args[1], err)
-		return
 	}
 
 	sbDescription, err := common.ReadSandboxDescription(sbDir)
 	if err != nil {
 		ts.Fatalf("error reading description file from %s: %s", sbDir, err)
-		return
 	}
-	isGreater, err := common.GreaterOrEqualVersion(sbDescription.Version, []int{8, 0, 11})
+	isGreater, err := common.GreaterOrEqualVersion(sbDescription.Version, []int{8, 0, 1})
 	if err != nil {
 		ts.Fatalf("error comparing version '%s': %s", sbDescription.Version, err)
-		return
 	}
 	if isGreater {
 		morePorts, ok := portAdjustment80[sbDescription.SBType]
 		if !ok {
 			ts.Fatalf("error recognizing the type of sandbox '%s': %s", path.Base(sbDir), sbDescription.SBType)
-			return
 		}
 		numPorts += morePorts
 	}
 	if len(sbDescription.Port) != numPorts {
 		ts.Fatalf("sandbox '%s': wanted %d ports - got %d", path.Base(sbDir), numPorts, len(sbDescription.Port))
-		return
 	}
 
 }
@@ -204,33 +198,27 @@ func checkPorts(ts *testscript.TestScript, neg bool, args []string) {
 func findErrorsInLogFile(ts *testscript.TestScript, neg bool, args []string) {
 	if len(args) < 1 {
 		ts.Fatalf("no sandbox path provided")
-		return
 	}
 	sbDir := args[0]
 	dataDir := path.Join(sbDir, "data")
 	logFile := path.Join(dataDir, "msandbox.err")
 	if !dirExists(dataDir) {
 		ts.Fatalf("sandbox data dir %s not found", dataDir)
-		return
 	}
 	if !fileExists(logFile) {
 		ts.Fatalf("file %s not found", logFile)
-		return
 	}
 
 	contents, err := ioutil.ReadFile(logFile)
 	if err != nil {
 		ts.Fatalf("%s", err)
-		return
 	}
 	hasError := strings.Contains(string(contents), "ERROR")
 	if neg && hasError {
 		ts.Fatalf("ERRORs found in %s\n", logFile)
-		return
 	}
 	if !neg && !hasError {
 		ts.Fatalf("ERRORs not found in %s\n", logFile)
-		return
 	}
 }
 
@@ -239,7 +227,6 @@ func findErrorsInLogFile(ts *testscript.TestScript, neg bool, args []string) {
 func checkFile(ts *testscript.TestScript, neg bool, args []string) {
 	if len(args) < 1 {
 		ts.Fatalf("no sandbox path provided")
-		return
 	}
 	sbDir := args[0]
 
@@ -266,7 +253,6 @@ func sleep(ts *testscript.TestScript, neg bool, args []string) {
 		duration, err = strconv.Atoi(args[0])
 		if err != nil {
 			ts.Fatalf("invalid number provided: '%s'", args[0])
-			return
 		}
 	}
 	time.Sleep(time.Duration(duration) * time.Second)
